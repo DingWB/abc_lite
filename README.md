@@ -2,13 +2,15 @@
 
 This repo implements a lightweight version of the abc model built on the assumption of users having a peak set/feature table. 
 
-# limitations
+## limitations
 Currently this implementation does not support quantile normalization or multifeature activity (e.g.  both H3k27ac & ATAC). 
 It operates under the assumption you have a gene expression measure, epigenome measure, and HiC
 
-# unimplemented features
+#### unimplemented features
 - Estimate HiC from genomic distance
+- quantile normalization
 
+## citation
 If you use the ABC model in published research, please cite:
 
 [1] Fulco CP, Nasser J, Jones TR, Munson G, Bergman DT, Subramanian V, Grossman SR, Anyoha R, Doughty BR, Patwardhan TA, Nguyen TH, Kane M, Perez EM, Durand NC, Lareau CA, Stamenova EK, Aiden EL, Lander ES & Engreitz JM. Activity-by-contact model of enhancer–promoter regulation from thousands of CRISPR perturbations. Nat. Genet. 51, 1664–1669 (2019). https://www.nature.com/articles/s41588-019-0538-0
