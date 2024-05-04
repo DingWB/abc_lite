@@ -1,8 +1,12 @@
 #!/bin/sh
 
 # assumes mamba installation
-mamba env update -p $CONDA_PREFIX -f abcenv.yml
 
+if [[ $(which mamba) ]]; then
+    mamba env update -p $CONDA_PREFIX -f abcenv.yml
+else
+    conda env update -p $CONDA_PREFIX -f abcenv.yml
+fi
 wget -P ./bin/ https://github.com/aidenlab/JuicerTools/releases/download/v3.0.0/juicer_tools.3.0.0.jar
 chmod +x ./bin/juicer_tools.3.0.0.jar
 
