@@ -15,20 +15,20 @@ Installation relies on pip and conda.
 
 1. clone the repo
 2. setup conda env
-* suggested python 3.9, not tested with other versions
-'''
+suggested python 3.9, not tested with other versions
+```
 conda create -n abc_lite python=3.9
 conda activate abc_lite
-'''
+```
 3. install requirements
 this additionally downloads juicertools and sets the environmental variable JUICERTOOLS in the environment
-'''
+```
 bash ./conda_install.sh
-'''
+```
 4. Finish setup with pip
-'''
+```
 python3 -m pip install .
-'''
+```
 
 ## citation
 If you use the ABC model in published research, please cite:
