@@ -8,7 +8,6 @@ dependencies:
   - matplotlib
   - natsort
   - ncls
-  - ncurse
   - numpy
   - numpy-base
   - openjdk

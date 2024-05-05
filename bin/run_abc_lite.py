@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 import os
 import sys
 # sys.path.insert(0, '/data/earmand/projects/dp_hic_revision/abc_model/ABC-Enhancer-Gene-Prediction/src')
-from neighborhoods import assign_enhancer_classes, get_tss_for_bed
+from abc_lite.neighborhoods import assign_enhancer_classes, get_tss_for_bed
 from argparse import ArgumentParser
 import pandas as pd
 import numpy as np

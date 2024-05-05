@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 from scipy import interpolate
+import pysam
 import os
 import os.path
 from subprocess import check_call, check_output, PIPE, Popen, getoutput, CalledProcessError
-from abc_lite.tools import *
+from tools import *
 import linecache
 import traceback
 import time
@@ -105,11 +106,6 @@ def read_bed(filename, extra_colnames=bed_extra_colnames, chr=None, sort=False, 
     if sort:
         result.sort_values(["chr", "start", "end"], inplace=True)
     return result
-
-
-def my_qnorm(df, qnorm_method='rank', separate_promoters=True):
-    pass
-
 
 ### todo write my own qnorm function
 def run_qnorm(df, qnorm, qnorm_method = "rank", separate_promoters = True):
