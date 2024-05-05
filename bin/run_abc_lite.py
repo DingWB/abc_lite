@@ -2,7 +2,7 @@
 import os
 import sys
 # sys.path.insert(0, '/data/earmand/projects/dp_hic_revision/abc_model/ABC-Enhancer-Gene-Prediction/src')
-from abc_lite.neighborhoods import assign_enhancer_classes, get_tss_for_bed
+from abc_lite.neighborhoods import assign_enhancer_classes, get_tss_for_bed, run_qnorm
 from argparse import ArgumentParser
 import pandas as pd
 import numpy as np
@@ -77,6 +77,8 @@ def format_enhancer_table(in_path, gene_table, outdir,
             enhancer_table = enhancer_table.loc[:,['chrom', 'start', 'end', signal_col]]
             enhancer_table.columns = ['chr', 'start', 'end', signal_col]
     enhancer_table['activity_base'] = enhancer_table[signal_col].values
+    if qnorm:
+        run_qnorm(enhancer_table, method='rank', separate_promoters=True)
 
     # quantile normalize the activity values
 
@@ -113,7 +115,7 @@ def main():
             help='Whether the input files have headers',
              default=False)
     parser.add_argument('--qnorm', action='store_true',
-            help='Wether to qunatile normalize atac signal')
+            help='Whether to qunatile normalize atac signal')
     parser.add_argument('--signal_col', 
             default=4, help='Column with signal values in atac file')
     parser.add_argument('--juicebox_path', type=str, default='$JUICERTOOLS',
