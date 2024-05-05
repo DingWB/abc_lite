@@ -10,11 +10,12 @@ fi
 
 $
 
-wget -P ./bin/ https://github.com/aidenlab/JuicerTools/releases/download/v3.0.0/juicer_tools.3.0.0.jar
-chmod +x ./bin/juicer_tools.3.0.0.jar
+wget -P ./bin/ https://s3.amazonaws.com/hicfiles.tc4ga.com/public/juicer/juicer_tools_1.22.01.jar
+chmod +x ./bin/juicer_tools_1.22.01.jar
 
 mkdir -p $CONDA_PREFIX/envs/abc_lite/etc/conda/activate.d
 mkdir -p $CONDA_PREFIX/envs/abc_lite/etc/conda/deactivate.d
 
 echo "#!/bin/sh" >> $CONDA_PREFIX/envs/abc_lite/etc/conda/activate.d/env_vars.sh
-echo "export JUICERTOOLS=./bin/juicer_tools.3.0.0.jar" >> $CONDA_PREFIX/envs/abc_lite/etc/conda/activate.d/env_vars.sh
+chmod +x $CONDA_PREFIX/envs/abc_lite/etc/conda/activate.d/env_vars.sh
+echo "export JUICERTOOLS=$(pwd)/bin/juicer_tools_1.22.01.jar" >> $CONDA_PREFIX/envs/abc_lite/etc/conda/activate.d/env_vars.sh

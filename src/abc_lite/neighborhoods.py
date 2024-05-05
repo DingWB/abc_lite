@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from scipy import interpolate
 import os
 import os.path
 from subprocess import check_call, check_output, PIPE, Popen, getoutput, CalledProcessError
@@ -107,11 +106,18 @@ def read_bed(filename, extra_colnames=bed_extra_colnames, chr=None, sort=False, 
     return result
 
 
-def my_qnorm(df, qnorm_method='rank', separate_promoters=True):
-    pass
+def my_qnorm(df, separate_promoters=True):
+    if not separate_promoters:
+        df['qnormed'] = df['activity_base'].rank()/df.shape[0]
+    else:
+        this_idx = df.index[np.logical_or(df['class'] == "tss", df['class'] == "promoter")]
+        df.loc[this_idx, 'qnormed'] = df.loc[this_idx, 'activity_base'].rank()/len(this_idx)
+        this_idx = df.index[np.logical_or(df['class'] == "tss", df['class'] == "promoter")]
+        df.loc[this_idx, 'qnormed'] = df.loc[this_idx, 'activity_base'].rank()/len(this_idx)
+    df['un_normed'] = df['activity_base']
+    df['activity_base'] = df['qnormed']
+    return df
 
-
-### todo write my own qnorm function
 def run_qnorm(df, qnorm, qnorm_method = "rank", separate_promoters = True):
     # Quantile normalize epigenetic data to a reference
     #
