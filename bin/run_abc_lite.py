@@ -127,20 +127,15 @@ def main():
         help='logs the output of the commands to a file')
 
     args = parser.parse_args()
-
     # read in gene table
-
     os.makedirs(args.out, exist_ok=True)
-
     gene_table = format_gene_table(args.rna, args.out, #args.chrom_sizes,
                                     args.header, args.tss_slop)
-
     # read in enhancer table
     format_enhancer_table(in_path = args.atac, gene_table = gene_table, 
                 qnorm=args.qnorm,
              header=args.header, signal_col=args.signal_column, 
              tss_slop =args.tss_slop, outdir=args.out)
-
     # dump hic
     os.makedirs(f'{args.out}/hic_dump', exist_ok=True)
     hic_command = ( f'python {args.src_path}/juicebox_dump.py '
@@ -154,7 +149,7 @@ def main():
     abc_command = (f'python {args.src_path}/predict.py ' 
                    f'--genes {args.out}/GeneList.txt '
                    f'--enhancers {args.out}/EnhancerList.txt '
-                   f'--threshold 0.2 '
+                   f'--threshold {args.threshold} '
                    f'--HiCdir {args.out}/hic_dump --outdir {args.out} '
                    f'--window {args.window_size} '
                    '--make_all_putative '
@@ -164,7 +159,6 @@ def main():
     )
     print('abc command: \n', abc_command)
     os.system(abc_command)
-
 
 if __name__ == '__main__':
     main()
