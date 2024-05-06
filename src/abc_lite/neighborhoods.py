@@ -107,6 +107,7 @@ def read_bed(filename, extra_colnames=bed_extra_colnames, chr=None, sort=False, 
 
 
 def my_qnorm(df, separate_promoters=True):
+    df['qnormed'] = df['activity_base']
     if not separate_promoters:
         df['qnormed'] = df['activity_base'].rank()/df.shape[0]
     else:

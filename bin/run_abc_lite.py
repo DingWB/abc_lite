@@ -100,8 +100,6 @@ def main():
             required=True, help='Path to Hi-C data in .hic format')
     parser.add_argument('--out', type=str,
             required=True, help='Output directory')
-#     parser.add_argument('--chrom_sizes', type=str,
-#             required=True, help='Path to chrom sizes file')
     parser.add_argument('--hic_resolution', type=int,
             default=10000, help='Resolution of Hi-C data')
     parser.add_argument('--tss_slop', type=int,
@@ -125,6 +123,9 @@ def main():
             help='the minimum expression qunatile for which abc links are calculated')
     parser.add_argument('--threshold', type=float, default=0.02,
             help='Threshold for ABC model peak-gene links')
+    parser.add_argument('--log', action='store_true',
+        help='logs the output of the commands to a file')
+
     args = parser.parse_args()
 
     # read in gene table
