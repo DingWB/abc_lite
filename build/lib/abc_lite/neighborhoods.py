@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-from scipy import interpolate
-import pysam
 import os
 import os.path
 from subprocess import check_call, check_output, PIPE, Popen, getoutput, CalledProcessError
-from tools import *
+from abc_lite.tools import *
 import linecache
 import traceback
 import time
@@ -51,10 +49,6 @@ def assign_enhancer_classes(enhancers, genes, tss_slop=500):
         
         return genic_enh, promoter_enh
 
-    # import pdb
-    # pdb.Pdb(stdout=sys.__stdout__).set_trace()
-    # pdb.set_trace()
-
     # label everything as intergenic
     enhancers["class"] = "intergenic"
     enhancers['uid'] = range(enhancers.shape[0])
@@ -85,7 +79,6 @@ def assign_enhancer_classes(enhancers, genes, tss_slop=500):
     return enhancers
 
 
-# From /seq/lincRNA/Jesse/bin/scripts/JuicerUtilities.R
 #
 bed_extra_colnames = ["name", "score", "strand", "thickStart", "thickEnd", "itemRgb", "blockCount", "blockSizes", "blockStarts"]
 #JN: 9/13/19: Don't assume chromosomes start with 'chr'
@@ -107,7 +100,20 @@ def read_bed(filename, extra_colnames=bed_extra_colnames, chr=None, sort=False, 
         result.sort_values(["chr", "start", "end"], inplace=True)
     return result
 
-### todo write my own qnorm function
+
+def my_qnorm(df, separate_promoters=True):
+    df['qnormed'] = df['activity_base']
+    if not separate_promoters:
+        df['qnormed'] = df['activity_base'].rank()/df.shape[0]
+    else:
+        this_idx = df.index[np.logical_or(df['class'] == "tss", df['class'] == "promoter")]
+        df.loc[this_idx, 'qnormed'] = df.loc[this_idx, 'activity_base'].rank()/len(this_idx)
+        this_idx = df.index[np.logical_or(df['class'] == "tss", df['class'] == "promoter")]
+        df.loc[this_idx, 'qnormed'] = df.loc[this_idx, 'activity_base'].rank()/len(this_idx)
+    df['un_normed'] = df['activity_base']
+    df['activity_base'] = df['qnormed']
+    return df
+
 def run_qnorm(df, qnorm, qnorm_method = "rank", separate_promoters = True):
     # Quantile normalize epigenetic data to a reference
     #

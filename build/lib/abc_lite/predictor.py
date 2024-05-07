@@ -35,21 +35,6 @@ def make_pred_table(chromosome, enh, genes, args):
     pred['distance'] = abs(pred['enh_midpoint'] - pred['TargetGeneTSS'])
     pred = pred.loc[pred['distance'] < args.window,:] #for backwards compatability
 
-    #without pyranges version
-    # else:
-    #     enh['temp_merge_key'] = 0
-    #     genes['temp_merge_key'] = 0
-
-    #     #Make cartesian product and then subset to EG pairs within window. 
-    #     #TO DO: Replace with pyranges equivalent of bedtools intersect or GRanges overlaps 
-    #     pred = pd.merge(enh, genes, on = 'temp_merge_key')
-
-    #     pred['enh_midpoint'] = (pred['start'] + pred['end'])/2
-    #     pred['distance'] = abs(pred['enh_midpoint'] - pred['TargetGeneTSS'])
-    #     pred = pred.loc[pred['distance'] < args.window,:]
-
-    #     print('Done. There are {} putative enhancers for chromosome {}'.format(pred.shape[0], chromosome))
-    #     print('Elapsed time: {}'.format(time.time() - t))
 
     return pred
 
@@ -195,5 +180,9 @@ def make_gene_prediction_stats(pred, args):
     summ2 = pred.loc[pred['class'] != 'promoter',:].groupby(['chr','TargetGene','TargetGeneTSS']).agg({args.score_column : lambda x: sum(x > args.threshold)})
     summ2.columns = ['nDistalEnhancersPredicted']
     summ1 = summ1.merge(summ2, left_index=True, right_index=True)
+    for col in [i for i in pred.columns if '.Score.Numerator' in i ]:
+        activity = pred.groupby(['chr','TargetGene','TargetGeneTSS']).agg({col : 'sum'})
+        activity.columns = [col.split('.')[0] + 'TotalActivity']
+        summ1.merge(activity, left_index=True, right_index=True)
 
     summ1.to_csv(os.path.join(args.outdir, "GenePredictionStats.txt"), sep="\t", index=True)

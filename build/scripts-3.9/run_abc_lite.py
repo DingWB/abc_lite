@@ -2,7 +2,7 @@
 import os
 import sys
 # sys.path.insert(0, '/data/earmand/projects/dp_hic_revision/abc_model/ABC-Enhancer-Gene-Prediction/src')
-from abc_lite.neighborhoods import assign_enhancer_classes, get_tss_for_bed
+from abc_lite.neighborhoods import assign_enhancer_classes, get_tss_for_bed, my_qnorm
 from argparse import ArgumentParser
 import pandas as pd
 import numpy as np
@@ -13,7 +13,8 @@ def sanitize_cols(df):
     df = df.loc[:,~df.columns.duplicated()].copy()
     return df
 
-def format_gene_table(in_path, outdir, chrom_sizes,
+def format_gene_table(in_path, outdir,
+                        #  chrom_sizes,
                      header=False, tss_slop=1000):
     '''
     Read in gene table and format it for ABC model
@@ -78,17 +79,13 @@ def format_enhancer_table(in_path, gene_table, outdir,
             enhancer_table.columns = ['chr', 'start', 'end', signal_col]
     enhancer_table['activity_base'] = enhancer_table[signal_col].values
 
-    # quantile normalize the activity values
-
-    #     enhancer_table['activity_base'] = enhancer_table['activity_base'].rank() / float(len(enhacer_table))
-    # santatize the enhancer table before pyranges
     enhancer_table = sanitize_cols(enhancer_table)
     enhancer_table = assign_enhancer_classes(enhancer_table,
                                          gene_table, 
                                          tss_slop)
     if qnorm:
-    # todo implement quantile normalization
-        pass
+        my_qnorm(enhancer_table,  separate_promoters=True)
+        
     enhancer_table.to_csv(os.path.join(outdir, "EnhancerList.txt"),
                 sep='\t', index=False, header=True, float_format="%.6f")
 
@@ -103,8 +100,6 @@ def main():
             required=True, help='Path to Hi-C data in .hic format')
     parser.add_argument('--out', type=str,
             required=True, help='Output directory')
-    parser.add_argument('--chrom_sizes', type=str,
-            required=True, help='Path to chrom sizes file')
     parser.add_argument('--hic_resolution', type=int,
             default=10000, help='Resolution of Hi-C data')
     parser.add_argument('--tss_slop', type=int,
@@ -113,7 +108,7 @@ def main():
             help='Whether the input files have headers',
              default=False)
     parser.add_argument('--qnorm', action='store_true',
-            help='Wether to qunatile normalize atac signal')
+            help='Whether to qunatile normalize atac signal')
     parser.add_argument('--signal_col', 
             default=4, help='Column with signal values in atac file')
     parser.add_argument('--juicebox_path', type=str, default='$JUICERTOOLS',
@@ -126,21 +121,21 @@ def main():
             help='Column with signal values in atac file')
     parser.add_argument('--gene_quantile', type=float, default=0.4,
             help='the minimum expression qunatile for which abc links are calculated')
-    parser.add_argument('--threshold', type=float, default=0.2,
+    parser.add_argument('--threshold', type=float, default=0.02,
             help='Threshold for ABC model peak-gene links')
+    parser.add_argument('--log', action='store_true',
+        help='logs the output of the commands to a file')
+
     args = parser.parse_args()
-
     # read in gene table
-
-    gene_table = format_gene_table(args.rna, args.out, args.chrom_sizes,
+    os.makedirs(args.out, exist_ok=True)
+    gene_table = format_gene_table(args.rna, args.out, #args.chrom_sizes,
                                     args.header, args.tss_slop)
-
     # read in enhancer table
     format_enhancer_table(in_path = args.atac, gene_table = gene_table, 
                 qnorm=args.qnorm,
              header=args.header, signal_col=args.signal_column, 
              tss_slop =args.tss_slop, outdir=args.out)
-
     # dump hic
     os.makedirs(f'{args.out}/hic_dump', exist_ok=True)
     hic_command = ( f'python {args.src_path}/juicebox_dump.py '
@@ -154,7 +149,7 @@ def main():
     abc_command = (f'python {args.src_path}/predict.py ' 
                    f'--genes {args.out}/GeneList.txt '
                    f'--enhancers {args.out}/EnhancerList.txt '
-                   f'--threshold 0.2 '
+                   f'--threshold {args.threshold} '
                    f'--HiCdir {args.out}/hic_dump --outdir {args.out} '
                    f'--window {args.window_size} '
                    '--make_all_putative '
@@ -165,12 +160,5 @@ def main():
     print('abc command: \n', abc_command)
     os.system(abc_command)
 
-
 if __name__ == '__main__':
     main()
-
-
-
-
-
-

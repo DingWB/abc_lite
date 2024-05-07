@@ -113,8 +113,6 @@ def main():
             default=4, help='Column with signal values in atac file')
     parser.add_argument('--juicebox_path', type=str, default='$JUICERTOOLS',
             help='Path to juicebox jar file')
-    parser.add_argument('--src_path', type=str,
-            default='/data/earmand/projects/dp_hic_revision/abc_model/ABC-Enhancer-Gene-Prediction/src')
     parser.add_argument('--window_size', type=int, default=5000000,
             help='Window size around gene to look for enhancers')
     parser.add_argument('--signal_column', default=4,
@@ -138,7 +136,7 @@ def main():
              tss_slop =args.tss_slop, outdir=args.out)
     # dump hic
     os.makedirs(f'{args.out}/hic_dump', exist_ok=True)
-    hic_command = ( f'python {args.src_path}/juicebox_dump.py '
+    hic_command = ( 'juicebox_dump.py '
      f'--hic_file {args.hic} --resolution {args.hic_resolution} '
      f'--outdir {args.out}/hic_dump --juicebox "java -jar {args.juicebox_path}"'
     )
@@ -146,7 +144,7 @@ def main():
     os.system(hic_command)
 
     # run abc
-    abc_command = (f'python {args.src_path}/predict.py ' 
+    abc_command = (f'predict.py ' 
                    f'--genes {args.out}/GeneList.txt '
                    f'--enhancers {args.out}/EnhancerList.txt '
                    f'--threshold {args.threshold} '

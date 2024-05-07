@@ -1,9 +1,10 @@
-from hic import *
+#!/usr/bin/env python
+from abc_lite.hic import *
 import numpy as np
 from functools import reduce
 import argparse
 import sys, os, os.path
-from tools import write_params
+from abc_lite.tools import write_params
 import pyranges
 
 # To do

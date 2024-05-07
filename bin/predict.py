@@ -1,7 +1,8 @@
+#!/usr/bin/env python
 import argparse
-from predictor import *
-from tools import *
-from getVariantOverlap import *
+from abc_lite.predictor import *
+from abc_lite.tools import *
+from abc_lite.getVariantOverlap import *
 import pandas as pd
 import numpy as np
 import sys, traceback, os, os.path
@@ -125,7 +126,6 @@ def main():
     all_positive.to_csv(pred_file_full, sep="\t", index=False, header=True, float_format="%.6f")
     all_positive[slim_cols].to_csv(pred_file_slim, sep="\t", index=False, header=True, float_format="%.6f")
 
-    
     make_gene_prediction_stats(all_putative, args)
     write_connections_bedpe_format(all_positive, pred_file_bedpe, args.score_column)
     
@@ -139,7 +139,7 @@ def main():
             all_putative.loc[all_putative.TargetGeneIsExpressed,:].to_hdf(all_pred_file_expressed, key='predictions', complevel=9, mode='w')
             all_putative.loc[~all_putative.TargetGeneIsExpressed,:].to_hdf(all_pred_file_nonexpressed, key='predictions', complevel=9, mode='w')
    
-    test_variant_overlap(args, all_putative.loc[all_putative.TargetGeneIsExpressed,:])
+    # test_variant_overlap(args, all_putative.loc[all_putative.TargetGeneIsExpressed,:])
 
     print("Done.")
     
