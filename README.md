@@ -2,6 +2,12 @@
 
 This repo implements a lightweight version of the abc model built on the assumption of users having a peak set/feature table. 
 
+Additionally this repo computes gene activity scores. These can be found in the `GenePredictionStats.txt` file in the
+output directory. Essentially the gene activity score is the activity by contact of all peaks with a single gene. These
+scores are based on the work below: 
+
+Xu, Z., Lee, DS., Chandran, S. et al. Structural variants drive context-dependent oncogene activation in cancer. Nature 612, 564–572 (2022). https://doi.org/10.1038/s41586-022-05504-4
+
 ## limitations
 Currently this implementation does not support quantile normalization or multifeature activity (e.g.  both H3k27ac & ATAC). 
 It operates under the assumption you have a gene expression measure, epigenome measure, and HiC
@@ -36,6 +42,10 @@ If you use the ABC model in published research, please cite:
 [1] Fulco CP, Nasser J, Jones TR, Munson G, Bergman DT, Subramanian V, Grossman SR, Anyoha R, Doughty BR, Patwardhan TA, Nguyen TH, Kane M, Perez EM, Durand NC, Lareau CA, Stamenova EK, Aiden EL, Lander ES & Engreitz JM. Activity-by-contact model of enhancer–promoter regulation from thousands of CRISPR perturbations. Nat. Genet. 51, 1664–1669 (2019). https://www.nature.com/articles/s41588-019-0538-0
 
 [2] Nasser J, Bergman DT, Fulco CP, Guckelberger P, Doughty BR, Patwardhan TA, Jones TR, Nguyen TH, Ulirsch JC, Lekschas F, Mualim K, Natri HM, Weeks EM, Munson G, Kane M, Kang HY, Cui A, Ray JP, Eisenhaure TM, Collins RL, Dey K, Pfister H, Price AL, Epstein CB, Kundaje A, Xavier RJ, Daly MJ, Huang H, Finucane HK, Hacohen N, Lander ES, Engreitz JM. Genome-wide enhancer maps link risk variants to disease genes. Nature. 2021 May;593(7858):238-243. doi: 10.1038/s41586-021-03446-x
+
+If you use the gene activity scores, please cite the above works as well as:
+
+[3] Xu, Z., Lee, DS., Chandran, S. et al. Structural variants drive context-dependent oncogene activation in cancer. Nature 612, 564–572 (2022). https://doi.org/10.1038/s41586-022-05504-4
 
 ## Requirements
 For each cell-type, the inputs to the ABC model are:
