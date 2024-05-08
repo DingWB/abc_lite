@@ -72,8 +72,8 @@ Python (3.9)
 ### Example usage
 
 ```
-usage: run_abc_light.py [-h] --atac ATAC --rna RNA --hic HIC --out OUT --chrom_sizes CHROM_SIZES [--hic_resolution HIC_RESOLUTION] [--tss_slop TSS_SLOP] [--header] [--qnorm] [--signal_col SIGNAL_COL] [--juicebox_path JUICEBOX_PATH] [--src_path SRC_PATH] [--window_size WINDOW_SIZE] [--signal_column SIGNAL_COLUMN]
-                        [--gene_quantile GENE_QUANTILE] [--threshold THRESHOLD]
+usage: run_abc_lite.py [-h] --atac ATAC --rna RNA --hic HIC --out OUT [--hic_resolution HIC_RESOLUTION] [--tss_slop TSS_SLOP] [--header] [--qnorm] [--signal_col SIGNAL_COL]
+                       [--juicebox_path JUICEBOX_PATH] [--window_size WINDOW_SIZE] [--signal_column SIGNAL_COLUMN] [--gene_quantile GENE_QUANTILE] [--threshold THRESHOLD] [--log]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -81,17 +81,15 @@ optional arguments:
   --rna RNA             Path to RNA-seq data in 6 column bed format
   --hic HIC             Path to Hi-C data in .hic format
   --out OUT             Output directory
-  --chrom_sizes CHROM_SIZES
-                        Path to chrom sizes file
   --hic_resolution HIC_RESOLUTION
                         Resolution of Hi-C data
   --tss_slop TSS_SLOP   Distance around tss to assign peaks as tss
   --header              Whether the input files have headers
-  --qnorm               Wether to qunatile normalize atac signal
+  --qnorm               Whether to qunatile normalize atac signal
   --signal_col SIGNAL_COL
                         Column with signal values in atac file
   --juicebox_path JUICEBOX_PATH
-  --src_path SRC_PATH
+                        Path to juicebox jar file
   --window_size WINDOW_SIZE
                         Window size around gene to look for enhancers
   --signal_column SIGNAL_COLUMN
@@ -100,6 +98,7 @@ optional arguments:
                         the minimum expression qunatile for which abc links are calculated
   --threshold THRESHOLD
                         Threshold for ABC model peak-gene links
+  --log                 logs the output of the commands to a file
 
 ```
 
