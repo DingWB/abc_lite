@@ -147,13 +147,14 @@ def main():
         hic_dir=f"{args.out}/hic_dump"
     else:
         hic_dir=args.hic
+    print(hic_dir)
 
     # run abc
     abc_command = (f'predict.py ' 
                    f'--genes {args.out}/GeneList.txt '
                    f'--enhancers {args.out}/EnhancerList.txt '
                    f'--threshold {args.threshold} '
-                   f'--HiCdir  --outdir {args.out} '
+                   f'--HiCdir {hic_dir} --outdir {args.out} '
                    f'--window {args.window_size} '
                    '--make_all_putative '
                    f'--promoter_activity_quantile_cutoff {args.gene_quantile} '

@@ -1,3 +1,8 @@
+# Installation
+```shell
+pip uninstall -y abc_lite && pip install git+https://github.com/DingWB/abc_lite.git
+```
+
 # ABC (activity by contact model) lite
 
 This repo implements a lightweight version of the abc model built on the assumption of users having a peak set/feature table. 
