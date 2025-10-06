@@ -108,7 +108,12 @@ def main():
         this_enh = enhancers.loc[enhancers['chr'] == chromosome, :].copy()
         this_genes = genes.loc[genes['chr'] == chromosome, :].copy()
 
-        this_chr = make_predictions(chromosome, this_enh, this_genes, args)
+        try:
+            this_chr = make_predictions(chromosome, this_enh, this_genes, args)
+        except Exception as error_message:
+            print(error_message)
+            print(f"skip {chromosome}") # some chromosome has no KR or VC normalization because of sparsity, just skip it
+            continue
         all_putative_list.append(this_chr)
 
         print('Completed chromosome: {}. Elapsed time: {} \n'.format(chromosome, time.time() - t))
