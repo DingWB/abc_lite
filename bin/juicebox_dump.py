@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import subprocess
 from abc_lite.tools import run_command
