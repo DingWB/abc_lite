@@ -97,7 +97,8 @@ def main():
     parser.add_argument('--rna', type=str,
             required=True, help='Path to RNA-seq data in 6 column bed format')
     parser.add_argument('--hic', type=str,
-            required=True, help='Path to Hi-C data in .hic format')
+            required=True, help='Path to Hi-C data in .hic or juicebox (folder) format') #HiC_type
+    parser.add_argument("--hic_type",default="hic",choices=["hic", "juicebox"],help="format of hic files",)
     parser.add_argument('--out', type=str,
             required=True, help='Output directory')
     parser.add_argument('--hic_resolution', type=int,
@@ -135,20 +136,24 @@ def main():
              header=args.header, signal_col=args.signal_column, 
              tss_slop =args.tss_slop, outdir=args.out)
     # dump hic
-    os.makedirs(f'{args.out}/hic_dump', exist_ok=True)
-    hic_command = ( 'juicebox_dump.py '
-     f'--hic_file {args.hic} --resolution {args.hic_resolution} '
-     f'--outdir {args.out}/hic_dump --juicebox "java -jar {args.juicebox_path}"'
-    )
-    print('hic command: \n', hic_command)
-    os.system(hic_command)
+    if args.hic_type=='hic' and not os.path.exists(f'{args.out}/hic_dump'):
+        os.makedirs(f'{args.out}/hic_dump', exist_ok=True)
+        hic_command = ( 'juicebox_dump.py '
+        f'--hic_file {args.hic} --resolution {args.hic_resolution} '
+        f'--outdir {args.out}/hic_dump --juicebox "java -jar {args.juicebox_path}"'
+        )
+        print('hic command: \n', hic_command)
+        os.system(hic_command)
+        hic_dir=f"{args.out}/hic_dump"
+    else:
+        hic_dir=args.hic
 
     # run abc
     abc_command = (f'predict.py ' 
                    f'--genes {args.out}/GeneList.txt '
                    f'--enhancers {args.out}/EnhancerList.txt '
                    f'--threshold {args.threshold} '
-                   f'--HiCdir {args.out}/hic_dump --outdir {args.out} '
+                   f'--HiCdir  --outdir {args.out} '
                    f'--window {args.window_size} '
                    '--make_all_putative '
                    f'--promoter_activity_quantile_cutoff {args.gene_quantile} '

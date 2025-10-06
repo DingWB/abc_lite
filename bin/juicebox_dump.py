@@ -4,31 +4,14 @@ import subprocess
 from abc_lite.tools import run_command
 
 def parseargs():
-    parser = argparse.ArgumentParser(description="Download and dump HiC data")
-    parser.add_argument("--hic_file", required=True, help="Path or url to .hic file.")
-    parser.add_argument(
-        "--juicebox",
-        required=True,
-        default="",
-        help="path to juicebox executable or java command invoking juicer_tools.jar. eg: 'java -jar juicer_tools.jar'",
-    )
-    parser.add_argument(
-        "--resolution",
-        default=5000,
-        help="Resolution of HiC to download. In units of bp.",
-    )
-    parser.add_argument("--outdir", default=".")
-    parser.add_argument(
-        "--include_raw",
-        action="store_true",
-        help="Download raw matrix in addtion to KR",
-    )
-    parser.add_argument(
-        "--chromosomes",
-        default="all",
-        help="comma delimited list of chromosomes to download",
-    )
-    parser.add_argument("--skip_gzip", action="store_true", help="dont gzip hic files")
+    parser = argparse.ArgumentParser(description='Download and dump HiC data')
+    parser.add_argument('--hic_file', required=True, help="Path or url to .hic file.")
+    parser.add_argument('--juicebox', required=True, default="", help="path to juicebox executable or java command invoking juicer_tools.jar. eg: 'java -jar juicer_tools.jar'")
+    parser.add_argument('--resolution', default=5000, help="Resolution of HiC to download. In units of bp.")
+    parser.add_argument('--outdir', default=".")
+    parser.add_argument('--include_raw', action="store_true", help="Download raw matrix in addtion to KR")
+    parser.add_argument('--chromosomes', default="all", help="comma delimited list of chromosomes to download")
+    parser.add_argument('--skip_gzip', action="store_true", help="dont gzip hic files")
 
     return parser.parse_args()
 
@@ -42,7 +25,7 @@ def main(args):
         chromosomes = args.chromosomes.split(",")
 
     for chromosome in chromosomes:
-        print("Starting chr" + str(chromosome) + " ... ")
+        print("Starting" + str(chromosome) + " ... ")
         outdir = "{0}/{1}/".format(args.outdir, chromosome)
         command = "mkdir -p " + outdir
         run_command(command)
