@@ -1,6 +1,6 @@
 import argparse
 import subprocess
-from tools import run_command
+from abc_lite.tools import run_command
 
 def parseargs():
     parser = argparse.ArgumentParser(description="Download and dump HiC data")
